@@ -1,3 +1,5 @@
+package Task1;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,14 @@ public class Student {
         return students;
     }
 
+    public static void printStudents(Set<Student> students, int course) {
+        for (Student student : students) {
+            if (student.course == course) {
+                System.out.println(student.toString() + "The course is " + course + ".");
+            }
+        }
+    }
+
     public int getAverageGrade() {
         int sum = 0;
         for (Map.Entry<String, Integer> entry : subjectGrades.entrySet()) {
@@ -52,14 +62,6 @@ public class Student {
             return true;
         }
         return false;
-    }
-
-    public static void printStudents(Set<Student> students, int course){
-        for (Student student : students) {
-            if (student.course == course) {
-                System.out.println(student.toString() + "The course is " + course + ".");
-            }
-        }
     }
 
     @Override

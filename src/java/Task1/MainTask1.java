@@ -1,6 +1,8 @@
+package Task1;
+
 import java.util.*;
 
-public class Main {
+public class MainTask1 {
     public static void main(String[] args) {
         List<Student> students = new ArrayList<>(List.of(
                 new Student("Maksim", 2, 5, new HashMap<>(Map.of("Math", 10, "physics", 8, "philosophy", 9))),
@@ -36,6 +38,9 @@ public class Main {
                     new Student("Nina", 3, 2, new HashMap<>(Map.of("Math", 5, "physics", 1, "philosophy", 3)))
             ));
             Student.printStudents(myStudents, 4);
+
+            System.out.println();
+
         }
     }
 }
