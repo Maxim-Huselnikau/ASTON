@@ -1,0 +1,15 @@
+<suite name="GroupedSuite">
+    <test name="UnitTests">
+        <groups>
+            <run>
+                <include name="factorial"/>
+                <include name="trangle"/>
+                <include name="sumUp"/>
+                <include name="compare"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="MyTest"/>
+        </classes>
+    </test>
+</suite>
