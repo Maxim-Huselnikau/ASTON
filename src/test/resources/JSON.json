@@ -1,0 +1,27 @@
+{
+  "args": {
+
+  },
+  "data": "This is expected to be sent back as part of response body.",
+  "files": {
+
+  },
+  "form": {
+
+  },
+  "headers": {
+    "host": "postman-echo.com",
+    "x-request-start": "t1753704873.632",
+    "connection": "close",
+    "content-length": "58",
+    "x-forwarded-proto": "https",
+    "x-forwarded-port": "443",
+    "x-amzn-trace-id": "Root=1-688769a9-5a0da8de6a45bce73268c7eb",
+    "accept": "*/*",
+    "content-type": "text/plain;charset=UTF-8",
+    "user-agent": "Apache-HttpClient/4.5.13 (Java/11.0.27)",
+    "accept-encoding": "gzip,deflate"
+  },
+  "json": null,
+  "url": "https://postman-echo.com/put"
+}
