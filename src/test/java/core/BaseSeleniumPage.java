@@ -9,7 +9,7 @@ public abstract class BaseSeleniumPage {
         driver = webDriver;
     }
 
-    public String getWindowTitle(){
+    public String getWindowTitle() {
         return driver.getTitle();
     }
 }
