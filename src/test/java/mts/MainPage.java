@@ -5,6 +5,7 @@ import helpers.TestData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -67,6 +68,7 @@ public class MainPage extends BaseSeleniumPage {
     }
 
     public MoreAboutReplenishmentPage clickMoreAboutTheServiceLink() {
+        scrollToElement(submitButton);
         moreAboutTheServiceLink.click();
         return new MoreAboutReplenishmentPage();
     }
@@ -83,6 +85,7 @@ public class MainPage extends BaseSeleniumPage {
     }
 
     public List<String> getPaymentSystemLogos() {
+        scrollToElement(submitButton);
         return List.of(replenishmentBlockVisaLogo.getAttribute("alt"),
                 replenishmentBlockVerifiedByVisaLogo.getAttribute("alt"),
                 replenishmentBlockMasterCardLogo.getAttribute("alt"),
@@ -91,6 +94,7 @@ public class MainPage extends BaseSeleniumPage {
     }
 
     public PaymentDataPage fillReplenishmentWithoutCommissionForm(String phone, String money, String email) {
+        scrollToElement(submitButton);
         communicationServicesPhoneField.click();
         communicationServicesPhoneField.sendKeys(phone);
         communicationServicesSumField.click();
@@ -103,6 +107,7 @@ public class MainPage extends BaseSeleniumPage {
     }
 
     public String[][] getPaymentFormPlaceholders() {
+        scrollToElement(submitButton);
         String[][] placeholders = new String[4][3];
         List<WebElement> placeholdersList = paymentFormInputFields;
         List<WebElement> selectPaymentButtonsList = paymentButtonsList;
