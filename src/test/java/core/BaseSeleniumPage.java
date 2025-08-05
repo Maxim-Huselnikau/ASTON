@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 public abstract class BaseSeleniumPage {
-    protected static WebDriver driver;
+    public static WebDriver driver;
 
     public static void setDriver(WebDriver webDriver) {
         driver = webDriver;

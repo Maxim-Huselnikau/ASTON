@@ -1,11 +1,11 @@
-package mts;
+package pages;
 
 import core.BaseSeleniumPage;
 import helpers.TestData;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -63,16 +63,20 @@ public class MainPage extends BaseSeleniumPage {
         PageFactory.initElements(driver, this);
     }
 
+    @Step("Получаем название блока")
     public String getReplenishmentBlockHeader() {
+        scrollToElement(submitButton);
         return replenishmentBlockHeader.getText();
     }
 
+    @Step("Кликаем 'Подробнее о сервисе'")
     public MoreAboutReplenishmentPage clickMoreAboutTheServiceLink() {
         scrollToElement(submitButton);
         moreAboutTheServiceLink.click();
         return new MoreAboutReplenishmentPage();
     }
 
+    @Step("Соглашаемся со сбором кук, если окно кук появилось")
     public MainPage acceptCookiesIfPresent() {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
@@ -84,6 +88,7 @@ public class MainPage extends BaseSeleniumPage {
         return this;
     }
 
+    @Step("Получаем атрибуты 'alt' логотипов платежных систем")
     public List<String> getPaymentSystemLogos() {
         scrollToElement(submitButton);
         return List.of(replenishmentBlockVisaLogo.getAttribute("alt"),
@@ -93,6 +98,7 @@ public class MainPage extends BaseSeleniumPage {
                 replenishmentBlockBelcartLogo.getAttribute("alt"));
     }
 
+    @Step("Заполняем форму")
     public PaymentDataPage fillReplenishmentWithoutCommissionForm(String phone, String money, String email) {
         scrollToElement(submitButton);
         communicationServicesPhoneField.click();
@@ -106,6 +112,7 @@ public class MainPage extends BaseSeleniumPage {
         return new PaymentDataPage();
     }
 
+    @Step("Получаем placeholders")
     public String[][] getPaymentFormPlaceholders() {
         scrollToElement(submitButton);
         String[][] placeholders = new String[4][3];

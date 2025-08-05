@@ -1,4 +1,4 @@
-package mts;
+package pages;
 
 import core.BaseSeleniumPage;
 

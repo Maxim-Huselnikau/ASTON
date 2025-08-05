@@ -1,6 +1,7 @@
-package mts;
+package pages;
 
 import core.BaseSeleniumPage;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -33,6 +34,7 @@ public class PaymentDataPage extends BaseSeleniumPage {
         return payDescriptionText.getAttribute("textContent");
     }
 
+    @Step("Получаем сумму из заголовка попапа")
     public String getPaySumFomHeader() {
         String[] parts = payCostTextInHeader.getAttribute("textContent")
                 .trim()
@@ -40,6 +42,7 @@ public class PaymentDataPage extends BaseSeleniumPage {
         return parts[0];
     }
 
+    @Step("Получаем сумму из кнопки попапа")
     public String getPaySumFomButton() {
         String[] parts = payCostTextInHeader.getAttribute("textContent")
                 .trim().replaceAll("  ", "")
@@ -47,6 +50,7 @@ public class PaymentDataPage extends BaseSeleniumPage {
         return parts[0];
     }
 
+    @Step("Получаем placeholders полей")
     public String[] getPlaceholders() {
         List<WebElement> placeholdersList = labelsList;
         String[] parts = new String[placeholdersList.size()];
@@ -56,6 +60,7 @@ public class PaymentDataPage extends BaseSeleniumPage {
         return parts;
     }
 
+    @Step("Получаем атрибут src иконок платежных систем")
     public List<String> getPaymentSystemLogosSRC() {
         List<WebElement> imagesPaymentLogoList = imagesList;
         List<String> logosSRC = new ArrayList<>();
