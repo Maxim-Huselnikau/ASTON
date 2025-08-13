@@ -1,19 +1,25 @@
 package mts;
 
 import core.BaseSeleniumTest;
+import helpers.ClickableElements;
+import helpers.InputFields;
+import helpers.TextElements;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.MainPage;
-import pages.MoreAboutReplenishmentPage;
 import pages.PaymentDataPage;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
+import static helpers.Data.PHONE_NUMBER_PLACEHOLDER;
+import static helpers.Data.TITLE_OF_WINDOW_MORE_ABOUT_PAY;
 import static helpers.TestData.*;
+import static io.qameta.allure.Allure.step;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("'Онлайн пополнение без комиссии' блок")
 @Owner("Maksim Huselnikau")
@@ -23,14 +29,14 @@ public class MTSTest extends BaseSeleniumTest {
     @Description("Проверяем название блока 'Онлайн пополнение без комиссии' по тегу 'h3'")
     @Test
     void replenishmentBlockHeaderHasRightTextTest() {
-        MainPage mainPage = new MainPage();
-        String expectedHeader = "Онлайн пополнение без комиссии";
-        String actualHeader = mainPage.acceptCookiesIfPresent()
-                .getReplenishmentBlockHeader()
+//         MainPage mainPage = MainPage.open();
+        MainPage mainPage = MainPage.open();
+        String expectedHeader = TextElements.MAIN_PAGE_HEADER_OF_PAY_BLOCK.getText();
+        String actualHeader = mainPage.getElementText(TextElements.MAIN_PAGE_HEADER_OF_PAY_BLOCK.getElement())
                 .trim()
                 .replaceAll("\\s+", " ");
 
-        Assertions.assertEquals(expectedHeader, actualHeader);
+        assertEquals(expectedHeader, actualHeader);
     }
 
     @DisplayName("Проверяем наличие картинок платежных систем")
@@ -38,11 +44,11 @@ public class MTSTest extends BaseSeleniumTest {
             "'Онлайн пополнение без комиссии' по наличию соответствующего атрибута 'alt'")
     @Test
     void replenishmentBlockPaymentSystemLogosPresentTest() {
-        MainPage mainPage = new MainPage();
+        MainPage mainPage = MainPage.open();
         List<String> actualPaymentLogosAttributeAlt = mainPage.getPaymentSystemLogos();
-        List<String> expectedPaymentLogosAttributeAlt = List.of("Visa", "Verified By Visa", "MasterCard", "MasterCard Secure Code", "Белкарт");
+        List<String> expectedPaymentLogosAttributeAlt = PHONE_NUMBER_PLACEHOLDER;
 
-        Assertions.assertEquals(expectedPaymentLogosAttributeAlt, actualPaymentLogosAttributeAlt);
+        assertEquals(expectedPaymentLogosAttributeAlt, actualPaymentLogosAttributeAlt);
     }
 
     @DisplayName("Проверяем работу ссылки 'Подробнее о сервисе'")
@@ -50,12 +56,11 @@ public class MTSTest extends BaseSeleniumTest {
             "'Онлайн пополнение без комиссии' по названию открывшегося окна")
     @Test
     void moreAboutTheServiceLinkWorksTest() {
-        MainPage mainPage = new MainPage();
-        MoreAboutReplenishmentPage moreAboutReplenishmentPage = mainPage.acceptCookiesIfPresent().clickMoreAboutTheServiceLink();
-        String actualMoreAboutReplenishmentPageWindowTitle = moreAboutReplenishmentPage.getWindowTitle();
-        String expectedMoreAboutReplenishmentPageWindowTitle = "Порядок оплаты и безопасность интернет платежей";
+        String actualMoreAboutReplenishmentPageWindowTitle = MainPage.open().acceptCookiesIfPresent()
+                .clickOnElement(ClickableElements.LINK_MORE_ABOUT_THE_SERVICE).getWindowTitle();
+        String expectedMoreAboutReplenishmentPageWindowTitle = TITLE_OF_WINDOW_MORE_ABOUT_PAY;
 
-        Assertions.assertEquals(expectedMoreAboutReplenishmentPageWindowTitle, actualMoreAboutReplenishmentPageWindowTitle);
+        assertEquals(expectedMoreAboutReplenishmentPageWindowTitle, actualMoreAboutReplenishmentPageWindowTitle);
     }
 
     @DisplayName("Проверяем работу кнопки 'Продолжить'")
@@ -63,11 +68,11 @@ public class MTSTest extends BaseSeleniumTest {
             "в блоке 'Онлайн пополнение без комиссии' по полю в открывшемся окне'")
     @Test
     void replenishPhoneTest() {
-        MainPage mainPage = new MainPage();
+        MainPage mainPage = MainPage.open();
         PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent().fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
 
-        Assertions.assertEquals("Оплата: Услуги связи Номер:375" + PHONE,
-                paymentDataPage.getTextPayDescription().trim().replaceAll("\\s+", " "));
+        assertEquals(TextElements.PAYMENT_DATA_PAGE_DESCRIPTION_OF_PAYMENT.getText() + PHONE,
+                paymentDataPage.getElementAttribute(TextElements.PAYMENT_DATA_PAGE_DESCRIPTION_OF_PAYMENT, "textContent").trim().replaceAll("\\s+", " "));
     }
 
     @DisplayName("Проверяем placeholders для всех полей всех услуг")
@@ -75,40 +80,103 @@ public class MTSTest extends BaseSeleniumTest {
             "в блоке 'Онлайн пополнение без комиссии'")
     @Test
     void checkPlaceholdersTest() {
-        String[][] actualPlaceholders = new MainPage().acceptCookiesIfPresent().getPaymentFormPlaceholders();
-        String[][] expectedPlaceholders = {{PHONE_PLACEHOLDER, SUM_PLACEHOLDER, EMAIL_PLACEHOLDER},
-                {SUBSCRIBER_PHONE_PLACEHOLDER, SUM_PLACEHOLDER, EMAIL_PLACEHOLDER},
-                {ACCOUNT_NUMBER_ON_44_PLACEHOLDER, SUM_PLACEHOLDER, EMAIL_PLACEHOLDER},
-                {ACCOUNT_NUMBER_ON_2073_PLACEHOLDER, SUM_PLACEHOLDER, EMAIL_PLACEHOLDER}};
+        String[][] actualPlaceholders = MainPage.open().acceptCookiesIfPresent().getPaymentFormPlaceholders();
+        String[][] expectedPlaceholders =
+                {{InputFields.FIELD_CONNECTION_PHONE.getPlaceholder(), InputFields.FIELD_CONNECTION_SUM.getPlaceholder(), InputFields.FIELD_CONNECTION_EMAIL.getPlaceholder()},
+                        {InputFields.FIELD_HOME_INTERNET_PHONE.getPlaceholder(), InputFields.FIELD_HOME_INTERNET_SUM.getPlaceholder(), InputFields.FIELD_HOME_INTERNET_EMAIL.getPlaceholder()},
+                        {InputFields.FIELD_INSTALLMENT_ACCOUNT_NUMBER.getPlaceholder(), InputFields.FIELD_INSTALLMENT_SUM.getPlaceholder(), InputFields.FIELD_INSTALLMENT_EMAIL.getPlaceholder()},
+                        {InputFields.FIELD_DEBT_ACCOUNT_NUMBER.getPlaceholder(), InputFields.FIELD_DEBT_SUM.getPlaceholder(), InputFields.FIELD_DEBT_EMAIL.getPlaceholder()}};
 
-        Assertions.assertArrayEquals(expectedPlaceholders, actualPlaceholders);
+        assertArrayEquals(expectedPlaceholders, actualPlaceholders);
     }
 
-    @DisplayName("Проверяем placeholder-ы и введенные данные в попапе 'Платежные данные'")
-    @Description("Проверяем в попап вызванном по клику кнопки 'Продолжить' для варианта «Услуги связи» " +
-            "в блоке 'Онлайн пополнение без комиссии' корректность отображения суммы (в том числе на кнопке), номера телефона," +
-            "а также надписей в незаполненных полях для ввода реквизитов карты, наличие иконок платёжных систем.")
+    @DisplayName("Проверяем наличие иконок платежных систем в попапе 'Платежные данные'")
+    @Description("Проверяем в попапе вызванном по клику кнопки 'Продолжить' для варианта «Услуги связи» " +
+            "в блоке 'Онлайн пополнение без комиссии' наличие иконок платёжных систем по значению атрибута SRC")
     @Test
     void paymentDataPageDisplaysRightTextTest() {
-        MainPage mainPage = new MainPage();
+        MainPage mainPage = MainPage.open();
+        PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent()
+                .fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
+
+        List<String> listPaymentSystemLogosSRC = paymentDataPage.getPaymentSystemLogosSRC();
+
+        Assertions.assertAll(
+                () -> {
+                    step("Проверяем visa-system.svg");
+                    assertTrue(listPaymentSystemLogosSRC.get(0).contains("visa-system.svg"));
+                },
+                () -> {
+                    step("Проверяем mastercard-system.svg");
+                    assertTrue(listPaymentSystemLogosSRC.get(1).contains("mastercard-system.svg"));
+                },
+                () -> {
+                    step("Проверяем belkart-system.svg");
+                    assertTrue(listPaymentSystemLogosSRC.get(2).contains("belkart-system.svg"));
+                },
+                () -> {
+                    step("Проверяем maestro-system.svg");
+                    assertTrue(listPaymentSystemLogosSRC.get(3).contains("maestro-system.svg"));
+                },
+                () -> {
+                    step("Проверяем mir-system.svg");
+                    assertTrue(listPaymentSystemLogosSRC.get(4).contains("mir-system.svg"));
+                });
+
+    }
+
+    @DisplayName("Проверяем сумму в хэдере'")
+    @Description("Проверяем в попапе вызванном по клику кнопки 'Продолжить' для варианта «Услуги связи» " +
+            "в блоке 'Онлайн пополнение без комиссии' корректность отображения суммы в хэдере и кнопке")
+    @Test
+    void checkSumInHeader() {
+        MainPage mainPage = MainPage.open();
         PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent()
                 .fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
 
         DecimalFormat df = new DecimalFormat("#.00");
         String expectedSum = df.format(Double.valueOf(MONEY));
 
-        Assertions.assertEquals(expectedSum, paymentDataPage.getPaySumFomHeader());
-        Assertions.assertEquals(expectedSum, paymentDataPage.getPaySumFomButton());
-        Assertions.assertTrue(paymentDataPage.getTextPayDescription().contains(PHONE));
+        Assertions.assertAll(
+                () -> {
+                    step("Проверяем сумму в хэдере");
+                    assertEquals(expectedSum, paymentDataPage.getPaySumFomHeader());
+                },
+                () -> {
+                    step("Проверяем сумму в кнопке");
+                    assertEquals(expectedSum, paymentDataPage.getPaySumFomButton());
+                });
 
-        String[] expectedPlaceholders = {CARD_NUMBER_PLACEHOLDER, VALID_TILL_PLACEHOLDER, CVC_PLACEHOLDER, NAME_AND_SURNAME_PLACEHOLDER};
-        Assertions.assertArrayEquals(expectedPlaceholders, paymentDataPage.getPlaceholders());
+    }
 
-        List<String> listPaymentSystemLogosSRC = paymentDataPage.getPaymentSystemLogosSRC();
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(0).contains("visa-system.svg"));
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(1).contains("mastercard-system.svg"));
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(2).contains("belkart-system.svg"));
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(3).contains("maestro-system.svg"));
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(4).contains("mir-system.svg"));
+    @DisplayName("Проверяем номер телефона в хэдере'")
+    @Description("Проверяем в попапе вызванном по клику кнопки 'Продолжить' для варианта «Услуги связи» " +
+            "в блоке 'Онлайн пополнение без комиссии' корректность отображения номера телефона в хэдере")
+    @Test
+    void checkPhoneNumberInHeader() {
+        MainPage mainPage = MainPage.open();
+        PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent()
+                .fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
+
+        assertTrue(paymentDataPage.getElementAttribute(TextElements.PAYMENT_DATA_PAGE_DESCRIPTION_OF_PAYMENT, "textContent").contains(PHONE));
+    }
+
+    @DisplayName("Проверяем placeholders полей ввода информации о карте'")
+    @Description("Проверяем в попапе вызванном по клику кнопки 'Продолжить' для варианта «Услуги связи» " +
+            "в блоке 'Онлайн пополнение без комиссии' корректность отображения placeholders")
+    @Test
+    void checkPlaceholdersOnPaymentDataPage() {
+        MainPage mainPage = MainPage.open();
+        PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent()
+                .fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
+
+        String[] expectedPlaceholders =
+                {InputFields.FIELD_CARD_NUMBER.getPlaceholder(),
+                        InputFields.FIELD_CARD_EXPIRATION_DATE.getPlaceholder(),
+                        InputFields.FIELD_CARD_CVC.getPlaceholder(),
+                        InputFields.FIELD_CARD_HOLDER.getPlaceholder()};
+
+        assertArrayEquals(expectedPlaceholders, paymentDataPage.getPlaceholders());
+
     }
 }

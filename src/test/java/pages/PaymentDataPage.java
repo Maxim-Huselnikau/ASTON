@@ -1,42 +1,23 @@
 package pages;
 
 import core.BaseSeleniumPage;
+import helpers.ClickableElements;
+import helpers.TextElements;
 import io.qameta.allure.Step;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentDataPage extends BaseSeleniumPage {
 
-    @FindBy(xpath = "//div[@class='pay-description__text']/span")
-    private WebElement payDescriptionText;
-
-    @FindBy(xpath = "//div[@class='pay-description__cost']/span")
-    private WebElement payCostTextInHeader;
-
-    @FindBy(xpath = ".//app-card-page//button[@type='submit']")
-    private WebElement submitButton;
-
-    @FindBy(css = ".app-input label")
-    private List<WebElement> labelsList;
-
-    @FindBy(xpath = " //div[contains(@class,'icons-container')]//img")
-    private List<WebElement> imagesList;
-
-    public PaymentDataPage() {
-        PageFactory.initElements(driver, this);
-    }
-
-    public String getTextPayDescription() {
-        return payDescriptionText.getAttribute("textContent");
-    }
+    By listPlaceholders = By.cssSelector(".app-input label");
+    By imagesList = By.xpath("//div[contains(@class,'icons-container')]//img");
 
     @Step("Получаем сумму из заголовка попапа")
     public String getPaySumFomHeader() {
-        String[] parts = payCostTextInHeader.getAttribute("textContent")
+        String[] parts = getElementAttribute(TextElements.PAYMENT_DATA_PAGE_PAYMENT_COST_IN_HEADER, "textContent")
                 .trim()
                 .split(" ");
         return parts[0];
@@ -44,28 +25,29 @@ public class PaymentDataPage extends BaseSeleniumPage {
 
     @Step("Получаем сумму из кнопки попапа")
     public String getPaySumFomButton() {
-        String[] parts = payCostTextInHeader.getAttribute("textContent")
-                .trim().replaceAll("  ", "")
-                .split(" ");
-        return parts[0];
+        String[] parts =
+                ClickableElements.PAYMENT_DATA_PAGE_PAY_BUTTON.getElement().getAttribute("textContent")
+                        .trim().replaceAll("  ", " ")
+                        .split(" ");
+        return parts[1];
     }
 
     @Step("Получаем placeholders полей")
     public String[] getPlaceholders() {
-        List<WebElement> placeholdersList = labelsList;
+        List<WebElement> placeholdersList = getListWebElements(listPlaceholders);
         String[] parts = new String[placeholdersList.size()];
         for (int i = 0; i < placeholdersList.size(); i++) {
-            parts[i] = placeholdersList.get(i).getAttribute("textContent");
+            parts[i] = getElementAttribute(placeholdersList.get(i), "textContent");
         }
         return parts;
     }
 
     @Step("Получаем атрибут src иконок платежных систем")
     public List<String> getPaymentSystemLogosSRC() {
-        List<WebElement> imagesPaymentLogoList = imagesList;
+        List<WebElement> imagesPaymentLogoList = getListWebElements(imagesList);
         List<String> logosSRC = new ArrayList<>();
         for (WebElement imagesPaymentLogo : imagesPaymentLogoList) {
-            logosSRC.add(imagesPaymentLogo.getAttribute("src"));
+            logosSRC.add(getElementAttribute(imagesPaymentLogo, "src"));
         }
         return logosSRC;
     }
