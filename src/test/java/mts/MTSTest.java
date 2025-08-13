@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import static helpers.TestData.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MTSTest extends BaseSeleniumTest {
     @Test
@@ -16,7 +17,7 @@ public class MTSTest extends BaseSeleniumTest {
         String expectedHeader = "Онлайн пополнение без комиссии";
         String actualHeader = mainPage.getReplenishmentBlockHeader().trim().replaceAll("\\s+", " ");
 
-        Assertions.assertEquals(expectedHeader, actualHeader);
+        assertEquals(expectedHeader, actualHeader);
     }
 
     @Test
@@ -25,7 +26,7 @@ public class MTSTest extends BaseSeleniumTest {
         List<String> actualPaymentLogosAttributeAlt = mainPage.getPaymentSystemLogos();
         List<String> expectedPaymentLogosAttributeAlt = List.of("Visa", "Verified By Visa", "MasterCard", "MasterCard Secure Code", "Белкарт");
 
-        Assertions.assertEquals(expectedPaymentLogosAttributeAlt, actualPaymentLogosAttributeAlt);
+        assertEquals(expectedPaymentLogosAttributeAlt, actualPaymentLogosAttributeAlt);
     }
 
     @Test
@@ -35,7 +36,7 @@ public class MTSTest extends BaseSeleniumTest {
         String actualMoreAboutReplenishmentPageWindowTitle = moreAboutReplenishmentPage.getWindowTitle();
         String expectedMoreAboutReplenishmentPageWindowTitle = "Порядок оплаты и безопасность интернет платежей";
 
-        Assertions.assertEquals(expectedMoreAboutReplenishmentPageWindowTitle, actualMoreAboutReplenishmentPageWindowTitle);
+        assertEquals(expectedMoreAboutReplenishmentPageWindowTitle, actualMoreAboutReplenishmentPageWindowTitle);
     }
 
     @Test
@@ -43,7 +44,7 @@ public class MTSTest extends BaseSeleniumTest {
         MainPage mainPage = new MainPage();
         PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent().fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
 
-        Assertions.assertEquals("Оплата: Услуги связи Номер:375" + PHONE, paymentDataPage.getTextPayDescription().trim().replaceAll("\\s+", " "));
+        assertEquals("Оплата: Услуги связи Номер:375" + PHONE, paymentDataPage.getTextPayDescription().trim().replaceAll("\\s+", " "));
     }
 
     @Test
@@ -58,7 +59,38 @@ public class MTSTest extends BaseSeleniumTest {
     }
 
     @Test
-    void paymentDataPageDisplaysRightTextTest() {
+    void paymentLogosOnPaymentDataPageTest() {
+        MainPage mainPage = new MainPage();
+        PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent()
+                .fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
+
+        List<String> listPaymentSystemLogosSRC = paymentDataPage.getPaymentSystemLogosSRC();
+        assertTrue(listPaymentSystemLogosSRC.get(0).contains("visa-system.svg"));
+        assertTrue(listPaymentSystemLogosSRC.get(1).contains("mastercard-system.svg"));
+        assertTrue(listPaymentSystemLogosSRC.get(2).contains("belkart-system.svg"));
+        assertTrue(listPaymentSystemLogosSRC.get(3).contains("maestro-system.svg"));
+        assertTrue(listPaymentSystemLogosSRC.get(4).contains("mir-system.svg"));
+
+        Assertions.assertAll(
+                () -> {
+                    assertTrue(listPaymentSystemLogosSRC.get(0).contains("visa-system.svg"));
+                },
+                () -> {
+                    assertTrue(listPaymentSystemLogosSRC.get(1).contains("mastercard-system.svg"));
+                },
+                () -> {
+                    assertTrue(listPaymentSystemLogosSRC.get(2).contains("belkart-system.svg"));
+                },
+                () -> {
+                    assertTrue(listPaymentSystemLogosSRC.get(3).contains("maestro-system.svg"));
+                },
+                () -> {
+                    assertTrue(listPaymentSystemLogosSRC.get(4).contains("mir-system.svg"));
+                });
+    }
+
+    @Test
+    void paymentSumTest() {
         MainPage mainPage = new MainPage();
         PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent()
                 .fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
@@ -66,18 +98,33 @@ public class MTSTest extends BaseSeleniumTest {
         DecimalFormat df = new DecimalFormat("#.00");
         String expectedSum = df.format(Double.valueOf(MONEY));
 
-        Assertions.assertEquals(expectedSum, paymentDataPage.getPaySumFomHeader());
-        Assertions.assertEquals(expectedSum, paymentDataPage.getPaySumFomButton());
-        Assertions.assertTrue(paymentDataPage.getTextPayDescription().contains(PHONE));
+        assertAll(() -> assertEquals(expectedSum, paymentDataPage.getPaySumFomHeader()),
+                () -> assertEquals(expectedSum, paymentDataPage.getPaySumFomButton()));
+
+    }
+
+    @Test
+    void paymentPhoneNumberTest() {
+        MainPage mainPage = new MainPage();
+        PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent()
+                .fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        String expectedSum = df.format(Double.valueOf(MONEY));
+
+        assertTrue(paymentDataPage.getTextPayDescription().contains(PHONE));
+    }
+
+    @Test
+    void placeholdersOnPaymentDataPageTest() {
+        MainPage mainPage = new MainPage();
+        PaymentDataPage paymentDataPage = mainPage.acceptCookiesIfPresent()
+                .fillReplenishmentWithoutCommissionForm(PHONE, MONEY, EMAIL);
 
         String[] expectedPlaceholders = {CARD_NUMBER_PLACEHOLDER, VALID_TILL_PLACEHOLDER, CVC_PLACEHOLDER, NAME_AND_SURNAME_PLACEHOLDER};
         Assertions.assertArrayEquals(expectedPlaceholders, paymentDataPage.getPlaceholders());
-
-        List<String> listPaymentSystemLogosSRC = paymentDataPage.getPaymentSystemLogosSRC();
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(0).contains("visa-system.svg"));
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(1).contains("mastercard-system.svg"));
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(2).contains("belkart-system.svg"));
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(3).contains("maestro-system.svg"));
-        Assertions.assertTrue(listPaymentSystemLogosSRC.get(4).contains("mir-system.svg"));
     }
+
 }
+
+
