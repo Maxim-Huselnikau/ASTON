@@ -1,7 +1,4 @@
-public class Main {
-    public static void main(String[] args) {
-
-    }
+public class Helper {
 
     public static int getFactorial(int n) {
         int fact = 1;
@@ -17,6 +14,18 @@ public class Main {
 
     public static int sumUp(int number1, int number2) {
         return number1 + number2;
+    }
+
+    public static int deduct(int number1, int number2) {
+        return number1 - number2;
+    }
+
+    public static int multiply(int number1, int number2) {
+        return number1 * number2;
+    }
+
+    public static int divide(int number1, int number2) {
+        return number1 / number2;
     }
 
     public static boolean compare(int number1, int number2) {
