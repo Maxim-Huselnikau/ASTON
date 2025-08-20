@@ -4,7 +4,7 @@
             <run>
                 <include name="factorial"/>
                 <include name="trangle"/>
-                <include name="sumUp"/>
+                <include name="arithmetic"/>
                 <include name="compare"/>
             </run>
         </groups>
