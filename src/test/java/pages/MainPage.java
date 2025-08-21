@@ -1,17 +1,13 @@
 package pages;
 
 import core.BaseSeleniumPage;
-import helpers.ClickableElements;
-import helpers.InputFields;
-import helpers.TestData;
+import helpers.data.ClickableElements;
+import helpers.data.Data;
+import helpers.data.InputFields;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
 
 public class MainPage extends BaseSeleniumPage {
@@ -26,18 +22,16 @@ public class MainPage extends BaseSeleniumPage {
     By replenishmentBlockBelcartLogo = By.xpath("//img[@alt='Белкарт']");
 
     public static MainPage open() {
-        driver.get(TestData.URL);
+        driver.get(Data.URL);
         return new MainPage();
     }
 
     @Step("Соглашаемся со сбором кук")
     public MainPage acceptCookiesIfPresent() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-            wait.until(ExpectedConditions.visibilityOfElementLocated
-                    (By.id(ClickableElements.COOKIES_AGREE_BUTTON.getElement().getAttribute("id"))));
+            waitElementIsVisible(By.id(ClickableElements.COOKIES_AGREE_BUTTON.getElement().getAttribute("id")), Data.EXPLICITLY_WAIT_COOKIES);
             clickOnElement(ClickableElements.COOKIES_AGREE_BUTTON);
-        } catch (TimeoutException e) {
+        } catch (Exception e) {
             //Cookies popup not found. Continue test...
         }
         return this;

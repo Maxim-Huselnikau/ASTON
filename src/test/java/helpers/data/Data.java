@@ -1,8 +1,17 @@
-package helpers;
+package helpers.data;
 
 import java.util.List;
 
 public class Data {
+
+    //constants
+    public static final String URL = "https://www.mts.by/";
+
+    public static final int EXPLICITLY_WAIT = 5;
+    public static final int EXPLICITLY_WAIT_COOKIES = 2;
+    public static final int IMPLICITLY_WAIT = 5;
+
+    public static final boolean CLEAR_COOKIES_AND_STORAGE = true;
 
     /// MAIN PAGE ///
     public static final List<String> PHONE_NUMBER_PLACEHOLDER = List.of("Visa", "Verified By Visa", "MasterCard", "MasterCard Secure Code", "Белкарт");

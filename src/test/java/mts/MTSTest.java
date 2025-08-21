@@ -1,12 +1,11 @@
 package mts;
 
 import core.BaseSeleniumTest;
-import helpers.ClickableElements;
-import helpers.InputFields;
-import helpers.TextElements;
+import helpers.data.ClickableElements;
+import helpers.data.InputFields;
+import helpers.data.TextElements;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.MainPage;
@@ -15,9 +14,9 @@ import pages.PaymentDataPage;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import static helpers.Data.PHONE_NUMBER_PLACEHOLDER;
-import static helpers.Data.TITLE_OF_WINDOW_MORE_ABOUT_PAY;
-import static helpers.TestData.*;
+import static helpers.data.Data.PHONE_NUMBER_PLACEHOLDER;
+import static helpers.data.Data.TITLE_OF_WINDOW_MORE_ABOUT_PAY;
+import static helpers.data.TestData.*;
 import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +28,6 @@ public class MTSTest extends BaseSeleniumTest {
     @Description("Проверяем название блока 'Онлайн пополнение без комиссии' по тегу 'h3'")
     @Test
     void replenishmentBlockHeaderHasRightTextTest() {
-//         MainPage mainPage = MainPage.open();
         MainPage mainPage = MainPage.open();
         String expectedHeader = TextElements.MAIN_PAGE_HEADER_OF_PAY_BLOCK.getText();
         String actualHeader = mainPage.getElementText(TextElements.MAIN_PAGE_HEADER_OF_PAY_BLOCK.getElement())
@@ -101,7 +99,7 @@ public class MTSTest extends BaseSeleniumTest {
 
         List<String> listPaymentSystemLogosSRC = paymentDataPage.getPaymentSystemLogosSRC();
 
-        Assertions.assertAll(
+        assertAll(
                 () -> {
                     step("Проверяем visa-system.svg");
                     assertTrue(listPaymentSystemLogosSRC.get(0).contains("visa-system.svg"));
@@ -137,7 +135,7 @@ public class MTSTest extends BaseSeleniumTest {
         DecimalFormat df = new DecimalFormat("#.00");
         String expectedSum = df.format(Double.valueOf(MONEY));
 
-        Assertions.assertAll(
+        assertAll(
                 () -> {
                     step("Проверяем сумму в хэдере");
                     assertEquals(expectedSum, paymentDataPage.getPaySumFomHeader());

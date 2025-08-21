@@ -1,8 +1,8 @@
 package pages;
 
 import core.BaseSeleniumPage;
-import helpers.ClickableElements;
-import helpers.TextElements;
+import helpers.data.ClickableElements;
+import helpers.data.TextElements;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

@@ -1,14 +1,17 @@
 package core;
 
-import helpers.ClickableElements;
-import helpers.InputFields;
-import helpers.TextElements;
+import helpers.data.ClickableElements;
+import helpers.data.InputFields;
+import helpers.data.TextElements;
 import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 public abstract class BaseSeleniumPage {
@@ -28,6 +31,16 @@ public abstract class BaseSeleniumPage {
 
     public String getWindowTitle() {
         return driver.getTitle();
+    }
+
+    public WebElement waitElementIsVisible(By locator, int timeout) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        } catch (Exception e) {
+            //element not present
+        }
+        return null;
     }
 
     public BaseSeleniumPage scrollToElement(ClickableElements clickableElement) {

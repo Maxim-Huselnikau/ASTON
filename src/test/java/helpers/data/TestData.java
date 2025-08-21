@@ -1,7 +1,6 @@
-package helpers;
+package helpers.data;
 
 public class TestData {
-    public static final String URL = "https://www.mts.by/";
 
     /// MAIN PAGE ///
 
